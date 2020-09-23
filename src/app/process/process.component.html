@@ -1,0 +1,78 @@
+<h1 class="uk-heading-divider">Processos</h1>
+<div class="uk-clearfix">
+    <div class="uk-float-right">
+        <button class="uk-button uk-button-primary uk-margin-bottom" [routerLink]="['/newProcess']">Novo processo</button>
+    </div>
+    <div class="uk-float-left">
+        <div class="uk-margin">
+            <form class="uk-search uk-search-default">
+                <input class="uk-search-input" (input)="searchInput=$event.target.value" type="search" placeholder="Pesquisar">
+            </form>
+            <button (click)="searchProcess()" class="uk-button uk-button-primary uk-search-icon-flip" uk-search-icon></button>
+        </div>    
+    </div>
+</div>
+<div *ngIf="process !== undefined">
+
+<table class="uk-table uk-table-middle uk-table-divider">
+    <thead>
+        <tr style="background: #f2f2f2;">
+            <th class="uk-text-center">ID</th>
+            <th class="uk-text-center">SOLICITANTE</th>
+            <th class="uk-text-center">DATA DO PROCESSO</th>
+            <th class="uk-text-center">ENDEREÇO</th>
+            <th class="uk-text-center">PDF</th>
+            <th class="uk-text-center">OPÇÕES</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="process !== undefined">
+        <tr *ngFor="let item of process.list_items">
+            <td class="uk-text-center">{{item.id}}</td>
+            <td class="uk-text-center">{{item.name_requester}}</td>
+            <td class="uk-text-center">{{item.date_process | date: "dd/MM/yyyy"}}</td>
+            <td class="uk-text-center">{{item.street}}, {{item.city}}, {{item.district}}, {{item.num_house}} - {{item.zip_code}}</td>
+            <td class="uk-text-center"><button class="uk-button uk-button-default uk-button-small">DOCUMENTO</button></td>
+            <td class="uk-text-center">
+                <ul class="uk-iconnav">
+                    <li><button [routerLink]="['/process', item.id]" style="color: rgb(16, 101, 212);" uk-icon="icon: file-edit"></button></li>
+                    <li><button (click)="removeProcess(item.id)" style="color:red" uk-icon="icon: trash"></button></li>
+                </ul>
+            </td>
+        </tr>          
+    </tbody>
+</table>
+<div class="uk-clearfix">
+    <div class="uk-float-right">
+        <div *ngIf="process.total_pages > 0" class="uk-margin">
+             <select (input)="askedPage=$event.target.value" class="uk-select">
+                <option *ngFor="let item of [].constructor(process.total_pages); let i = index" value="{{i}}">{{i+1}}</option>
+            </select>
+        </div>
+        <div *ngIf="process.total_pages == 0" class="uk-margin">
+            <select (input)="askedPage=$event.target.value" class="uk-select">
+               <option value="0">1</option>
+           </select>
+       </div>
+    </div>
+    <div class="uk-float-left">
+        <div class="uk-margin">
+            <select (input)="itemsPerPage=$event.target.value" class="uk-select">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+            </select>
+        </div>    
+    </div>
+</div>
+<div *ngIf="!process" class="uk-flex uk-flex-center">
+    <span class="uk-position-center" uk-spinner="ratio: 3"></span>
+</div>
+<div *ngIf="process.list_items == ''">
+    <p class="uk-flex uk-flex-center">Nenhum registro encontrado.</p>
+</div>
+</div>
+<br>
+
+
